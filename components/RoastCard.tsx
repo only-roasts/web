@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Flame, Share2, Zap, Copy, Droplet } from "lucide-react"; // Added Droplet for water icon
 import { motion } from "framer-motion";
 import { Bangers } from "next/font/google";
+import Image from "next/image";
 
 interface RoastCardProps {
   roast: string;
   name: string;
+  showButtons: boolean;
   walletAddress: string;
   mintNFT: () => void;
   castOnWarpcast: () => void;
@@ -24,7 +26,7 @@ const bangers = Bangers({
 
 const RoastCard: React.FC<RoastCardProps> = ({
   roast,
-  name,
+  showButtons,
   walletAddress,
   mintNFT,
   castOnWarpcast,
@@ -51,7 +53,7 @@ const RoastCard: React.FC<RoastCardProps> = ({
             120 + i * 20
           }px] z-0`}
         >
-          <img
+          <Image
             src="/flame1.png"
             alt="Flames"
             className="w-full h-full object-cover mix-blend-overlay"
@@ -75,7 +77,7 @@ const RoastCard: React.FC<RoastCardProps> = ({
         <CardContent className="relative p-3 sm:p-4 text-center z-10">
           {/* Roastee name */}
           <div className="flex justify-between items-center mb-3 border pr-3 rounded-lg bg-[#ffffffaa]">
-            <img
+            <Image
               src="/logo.png"
               alt="OnlyRoasts Logo"
               height={80}
@@ -96,47 +98,50 @@ const RoastCard: React.FC<RoastCardProps> = ({
           </div>
 
           {/* Roast text with text shadow */}
+
           <motion.div
             className={`text-base sm:text-xl bg-[#fff] text-black text-start py-3 ${bangers.className}`}
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
           >
-            " {roast}"
+            &quot; {roast} &quot;
           </motion.div>
 
-          <div className="flex justify-around mt-3 gap-3">
-            <Button className="flex-1 border-red-500 bg-white border text-red-500 hover:bg-red-400 hover:text-black hover:scale-105 transition-all duration-300  py-2 rounded-xl shadow-lg">
-              <Flame className="w-5 h-5" />
-            </Button>
-            <Button className="flex-1 border-blue-500 bg-white border text-blue-500 hover:bg-blue-300 hover:text-black hover:scale-105 transition-all duration-300 py-2 rounded-xl shadow-lg">
-              <Droplet className="w-5 h-5" />
-            </Button>
-          </div>
-
-          {/* <div className="mt-4 sm:mt-5 flex justify-around space-x-3 overflow-x-auto hide-scrollbar py-3">
-            <Button
-              onClick={mintNFT}
-              className="bg-gray-600 hover:bg-gray-700 text-white rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 shadow-lg transform hover:translate-y-[-10px] transition-transform"
-            >
-              <Zap className="w-5 h-5" />
-              Mint as NFT
-            </Button>
-            <Button
-              onClick={castOnWarpcast}
-              className="bg-gray-600 hover:bg-gray-700 text-white rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 shadow-lg transform hover:translate-y-[-10px] transition-transform"
-            >
-              <Flame className="w-5 h-5" />
-              Cast on Warpcast
-            </Button>
-            <Button
-              onClick={share}
-              className="bg-gray-600 hover:bg-gray-700 text-white rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 shadow-lg transform hover:translate-y-[-10px] transition-transform"
-            >
-              <Share2 className="w-5 h-5" />
-              Share
-            </Button>
-          </div> */}
+          {showButtons ? (
+            <div className="mt-4 sm:mt-5 flex justify-around space-x-3 overflow-x-auto hide-scrollbar py-3">
+              <Button
+                onClick={mintNFT}
+                className="bg-gray-600 hover:bg-gray-700 text-white rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 shadow-lg transform hover:translate-y-[-10px] transition-transform"
+              >
+                <Zap className="w-5 h-5" />
+                Mint as NFT
+              </Button>
+              <Button
+                onClick={castOnWarpcast}
+                className="bg-gray-600 hover:bg-gray-700 text-white rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 shadow-lg transform hover:translate-y-[-10px] transition-transform"
+              >
+                <Flame className="w-5 h-5" />
+                Cast on Warpcast
+              </Button>
+              <Button
+                onClick={share}
+                className="bg-gray-600 hover:bg-gray-700 text-white rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 shadow-lg transform hover:translate-y-[-10px] transition-transform"
+              >
+                <Share2 className="w-5 h-5" />
+                Share
+              </Button>
+            </div>
+          ) : (
+            <div className="flex justify-around mt-3 gap-3">
+              <Button className="flex-1 border-red-500 bg-white border text-red-500 hover:bg-red-400 hover:text-black hover:scale-105 transition-all duration-300  py-2 rounded-xl shadow-lg">
+                <Flame className="w-5 h-5" />
+              </Button>
+              <Button className="flex-1 border-blue-500 bg-white border text-blue-500 hover:bg-blue-300 hover:text-black hover:scale-105 transition-all duration-300 py-2 rounded-xl shadow-lg">
+                <Droplet className="w-5 h-5" />
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </motion.div>
