@@ -40,20 +40,28 @@ export const generateRoastCardImage = async (
   const svg = await satori(
     <div tw="flex flex-col relative w-[320px] bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden">
       {/* Branding: Logo at top-left */}
-      <div tw="absolute top-3 left-3 z-10 flex">
-        <Image
-          src="https://cdn.dribbble.com/users/1172818/screenshots/8111167/media/7cc8ff70b93ab4e470f027ec80de7941.png"
-          alt="OnlyRoasts Logo"
-          tw="object-cover w-full h-full"
-        />
+      <div tw=" flex">
+        <div tw="flex flex-1">
+          <img
+            src="https://cdn.dribbble.com/users/1172818/screenshots/8111167/media/7cc8ff70b93ab4e470f027ec80de7941.png"
+            alt="OnlyRoasts Logo"
+            tw="object-cover w-full h-full"
+          />
+        </div>
 
-        <div tw="ml-2 text-black font-bold text-lg">OnlyRoasts</div>
-        <div>{walletAddress}</div>
+        <div tw="flex flex-1">
+          <div tw="ml-2 text-black font-bold text-lg flex">
+            <p>OnlyRoasts</p>
+          </div>
+          <div tw="flex">
+            <p>{walletAddress}</p>
+          </div>
+        </div>
       </div>
 
       {/* Render flames based on the 'lit' value */}
       <div tw="absolute flex top-0 z-0">
-        <Image
+        <img
           src={`${process.env.NEXT_PUBLIC_URL}flame1-min.png`}
           alt="Flames"
           tw="object-cover mix-blend-overlay h-full w-full"

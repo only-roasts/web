@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Flame, Share2, Zap, Copy, Droplet } from "lucide-react"; // Added Droplet for water icon
 import { motion } from "framer-motion";
 import { Bangers } from "next/font/google";
+import { shortenAddress, copyToClipboard } from "@/lib/utils";
 import Image from "next/image";
 
 interface RoastCardProps {
@@ -33,15 +34,6 @@ const RoastCard: React.FC<RoastCardProps> = ({
   share,
   lit,
 }) => {
-  const shortenAddress = (address: string) => {
-    return address.slice(0, 6) + "..." + address.slice(-4);
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(walletAddress);
-    alert("Wallet address copied to clipboard!");
-  };
-
   // Render flames based on the 'lit' value
   const renderFlames = () => {
     const flamesArray = [];
@@ -91,7 +83,7 @@ const RoastCard: React.FC<RoastCardProps> = ({
               <p>{shortenAddress(walletAddress)}</p>
 
               <Button
-                onClick={copyToClipboard}
+                onClick={() => copyToClipboard(walletAddress)}
                 className="bg-transparent text-black hover:bg-gray-100 rounded-xl border-none shadow-none px-3 "
               >
                 <Copy className="w-4 h-4" />

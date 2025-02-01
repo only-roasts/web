@@ -78,7 +78,7 @@ export default function Home() {
         share={() => {}}
       />
       {imageURL && (
-        <Image
+        <img
           src={`data:image/png;base64,${imageURL}`}
           alt="Image from Pinata IPFS"
           className="w-fit h-fit"
