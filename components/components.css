@@ -1,0 +1,19 @@
+.header{
+    height:100px;
+    width:100%;
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:20px;
+    justify-content: end;
+  }
+  .header>div{
+    background-color: white;
+    color:black;
+    height:60px;
+    display: grid;
+    place-items: center;
+    width:100px;
+    font-size: 25px;
+  }

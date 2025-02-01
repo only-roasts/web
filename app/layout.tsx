@@ -6,7 +6,7 @@ import {privyConfig} from '../lib/privyConfig';
 import {config} from '../lib/wagmiConfig';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {WagmiProvider, createConfig} from '@privy-io/wagmi';
-
+import Header from "@/components/Header"
 
 const oswald = Oswald({
   variable: "--font-oswald",
@@ -27,6 +27,7 @@ export default function RootLayout({
       <PrivyProvider appId="cm6gnt8v801ze12vjotttzrat" config={privyConfig}>
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={config}>
+          <Header/>
           {children}
         </WagmiProvider>
       </QueryClientProvider>
