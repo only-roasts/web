@@ -81,7 +81,7 @@ export default function Home() {
         <Image
           src={`data:image/png;base64,${imageURL}`}
           alt="Image from Pinata IPFS"
-          className="w-1/2 h-1/2"
+          className="w-fit h-fit"
         />
       )}
 

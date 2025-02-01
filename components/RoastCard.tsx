@@ -56,6 +56,8 @@ const RoastCard: React.FC<RoastCardProps> = ({
           <Image
             src="/flame1.png"
             alt="Flames"
+            width={300}
+            height={300}
             className="w-full h-full object-cover mix-blend-overlay"
           />
         </div>

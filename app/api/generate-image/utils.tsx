@@ -44,7 +44,7 @@ export const generateRoastCardImage = async (
         <Image
           src="https://cdn.dribbble.com/users/1172818/screenshots/8111167/media/7cc8ff70b93ab4e470f027ec80de7941.png"
           alt="OnlyRoasts Logo"
-          tw="object-cover"
+          tw="object-cover w-full h-full"
         />
 
         <div tw="ml-2 text-black font-bold text-lg">OnlyRoasts</div>
@@ -56,7 +56,7 @@ export const generateRoastCardImage = async (
         <Image
           src={`${process.env.NEXT_PUBLIC_URL}flame1-min.png`}
           alt="Flames"
-          tw="object-cover mix-blend-overlay"
+          tw="object-cover mix-blend-overlay h-full w-full"
         />
       </div>
 
