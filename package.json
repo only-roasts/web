@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@covalenthq/ai-agent-sdk": "^0.2.2",
     "@privy-io/react-auth": "^2.2.1",
     "@privy-io/server-auth": "^1.18.4",
     "@privy-io/wagmi": "^1.0.2",
