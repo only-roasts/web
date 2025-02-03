@@ -49,13 +49,9 @@ export const generateRoastCardImage = async (
           />
         </div>
 
-        <div tw="flex flex-1">
-          <div tw="ml-2 text-black font-bold text-lg flex">
-            <p>OnlyRoasts</p>
-          </div>
-          <div tw="flex">
-            <p>{walletAddress}</p>
-          </div>
+        <div tw="flex flex-1 flex-col">
+          <p>OnlyRoasts</p>
+          <p>{walletAddress}</p>
         </div>
       </div>
 
