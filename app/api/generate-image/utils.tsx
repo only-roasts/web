@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import Image from "next/image";
 import { join } from "path";
 import satori from "satori";
 import sharp from "sharp";

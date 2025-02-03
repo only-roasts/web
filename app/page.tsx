@@ -3,7 +3,6 @@
 import { useState } from "react";
 import axios from "axios";
 import RoastCard from "@/components/RoastCard";
-import Image from "next/image";
 
 export default function Home() {
   const [imageURL, setImageURL] = useState("");
