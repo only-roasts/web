@@ -1,14 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrivyClient } from "@privy-io/server-auth";
-const app_id = process.env.app_id;
-const secret_key = process.env.secret_key;
-const wallet_id = process.env.wallet_id;
-const privy = new PrivyClient(app_id!, secret_key!);
+
+const privy = new PrivyClient(
+  process.env.PRIVY_APP_ID!,
+  process.env.PRIVY_SECRET_KEY!
+);
 //server wallet configuration to send funds to embedded wallets of new users
 
 async function sendtransaction(address: `0x${string}`) {
   const data = await privy.walletApi.ethereum.sendTransaction({
-    walletId: wallet_id!,
+    walletId: process.env.PRIVY_SERVER_WALLET_ID!,
     caip2: "eip155:11155111",
     transaction: {
       to: address,

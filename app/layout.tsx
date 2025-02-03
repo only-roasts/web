@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${oswald.className}`}>
-        <PrivyProvider appId="cm6gnt8v801ze12vjotttzrat" config={privyConfig}>
+        <PrivyProvider appId={process.env.PRIVY_APP_ID!} config={privyConfig}>
           <QueryClientProvider client={queryClient}>
             <WagmiProvider config={config}>
               <Header />
