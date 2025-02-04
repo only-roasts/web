@@ -17,8 +17,8 @@ export default function Header() {
     
     const { login: loginUser } = useLogin({
         onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod, linkedAccount }) => {
+            console.log(user.wallet.address);  //debugging purposes
             if(isNewUser){
-                //console.log(user.wallet.address);         debugging purposes
                 fundNewUser(user.wallet.address);
               }
            
