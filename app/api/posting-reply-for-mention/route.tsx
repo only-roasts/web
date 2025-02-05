@@ -4,48 +4,81 @@ import { NextRequest, NextResponse } from "next/server";
 import { WarpcastPayload } from "pinata-fdk";
 import { sendCast, signInWithWarpcast } from "./utils";
 
-export async function POST(req: NextRequest) {
-  try {
-    // const signInData = await signInWithWarpcast();
-    // if (!signInData) {
-    //   return NextResponse.json(
-    //     { error: "Failed to get farcaster user" },
-    //     { status: 500 }
-    //   );
-    // }
-    // if (signInData) {
-    //   return NextResponse.json({
-    //     deepLinkUrl: signInData?.signerApprovalUrl,
-    //     pollingToken: signInData?.token,
-    //     publicKey: signInData?.publicKey,
-    //     privateKey: signInData?.privateKey,
-    //   });
-    // } else {
-    //   return NextResponse.json(
-    //     { error: "Failed to get farcaster user" },
-    //     { status: 500 }
-    //   );
-    // }
+let intervalId: NodeJS.Timeout | null = null;
 
+const alreadyCasted: string[] = [];
+
+export async function startBot() {
+  if (intervalId) {
+    console.log("Bot is already running.");
+    return;
+  }
+
+  intervalId = setInterval(() => {
+    checkAndPostMentions();
+  }, 5000);
+
+  console.log("Bot started, checking every 5 seconds.");
+}
+
+// Function to stop the bot
+export function stopBot() {
+  if (intervalId) {
+    clearInterval(intervalId);
+    intervalId = null;
+    console.log("Bot stopped.");
+  }
+}
+
+// Function to check mentions and post
+async function checkAndPostMentions() {
+  try {
+    // Fetch mentions (casts) using the API
     const mentionedCastsResponse = await axios.get(
       `https://hub.pinata.cloud/v1/castsByMention?fid=${process.env.FARCASTER_DEVELOPER_FID}`
     );
     const casts = mentionedCastsResponse.data.messages;
 
-    casts.map(async (cast: any) => {
-      const result = await sendCast(
-        "---# ROAST OF THE DAY #--- \n This you? , lol you just got roasted by our ai agent. Tag your friend to roast them too about their transactions onchain.",
-        cast.hash,
-        cast.data.fid
-      );
-    });
+    // Iterate over each cast and send a roast
+    for (const cast of casts) {
+      try {
+        if (!alreadyCasted.includes(cast.hash)) {
+          const result = await sendCast(
+            "---# ROAST OF THE DAY #--- \n This you? , lol you just got roasted by our ai agent. Tag your friend to roast them too about their transactions onchain.",
+            cast.hash,
+            cast.data.fid
+          );
+          alreadyCasted.push(cast.hash);
+        } else {
+          console.log("Already casted this mention: " + cast.hash);
+        }
+      } catch (error) {
+        console.error(`Failed to process cast ${cast.hash}:`, error);
+      }
+    }
 
-    return NextResponse.json(
-      {
-        result: "All casts have been sent",
-      },
-      { status: 200 }
-    );
+    console.log("All casts have been processed and sent.");
+  } catch (e) {
+    console.error("Error in processing casts:", e);
+  }
+}
+
+// POST endpoint to start or stop the bot
+export async function POST(req: NextRequest) {
+  try {
+    const { action } = await req.json();
+
+    if (action === "start") {
+      startBot();
+      return NextResponse.json({ result: "Bot started." }, { status: 200 });
+    }
+
+    if (action === "stop") {
+      stopBot();
+      return NextResponse.json({ result: "Bot stopped." }, { status: 200 });
+    }
+
+    return NextResponse.json({ error: "Invalid action." }, { status: 400 });
   } catch (e) {
     console.log(e);
     return NextResponse.json(
