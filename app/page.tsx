@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import RoastCard from "@/components/RoastCard";
 import { usePrivy } from "@privy-io/react-auth";
+import PartnerPrizesComponent from "@/components/PartnerPrizesComponent";
 
 const roastData = [
   {
@@ -48,8 +50,9 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center p-5">
+    <div className="flex flex-col items-center pt-5 pb-28">
       <Confetti width={width} height={height} recycle={runConfetti} />
+
       {/* Header */}
       <FaEthereum className="absolute w-72 h-72 inline-block left-[0px] text-gray-800  rotate-[-25deg] opacity-30" />
       <FaEthereum className="absolute w-96 h-96 inline-block right-[0] bottom-10 text-gray-800 z-0 rotate-[20deg] opacity-50" />
@@ -114,7 +117,7 @@ export default function LandingPage() {
         <RoastCard
           roast={roastData[0].roast}
           name={"YourName"}
-          showButtons={false}
+          showButtons={true}
           walletAddress={user?.wallet?.address!}
           lit={roastData[0].flameCount}
           castOnWarpcast={() => {}}
@@ -138,8 +141,8 @@ export default function LandingPage() {
         </Button>
       </section> */}
 
-      {/* Footer */}
-      <footer className="text-center text-gray-500 text-sm mt-20">
+      <PartnerPrizesComponent />
+      <footer className="text-center text-gray-500 text-sm fixed  z-10 bottom-5">
         Made with 🔥 by OnlyRoasts
       </footer>
     </div>
