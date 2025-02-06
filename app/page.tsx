@@ -6,8 +6,9 @@ import { Flame } from "lucide-react";
 import { FaEthereum } from "react-icons/fa";
 import { IoIosArrowDropright } from "react-icons/io";
 import ConnectButton from "@/components/ConnectButton";
-
+import Confetti from "react-confetti";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import RoastCard from "@/components/RoastCard";
 import { usePrivy } from "@privy-io/react-auth";
 
@@ -22,8 +23,33 @@ const roastData = [
 export default function LandingPage() {
   const { login, logout, ready, authenticated, user } = usePrivy(); // Get authentication state
 
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Set initial size
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [ready, authenticated]);
+
+  const { width, height } = windowSize;
+  const [runConfetti, setRunConfetti] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRunConfetti(false);
+    }, 5000);
+  }, []);
+
   return (
-    <div className="  flex flex-col items-center p-5">
+    <div className="flex flex-col items-center p-5">
+      <Confetti width={width} height={height} recycle={runConfetti} />
       {/* Header */}
       <FaEthereum className="absolute w-72 h-72 inline-block left-[0px] text-gray-800  rotate-[-25deg] opacity-30" />
       <FaEthereum className="absolute w-96 h-96 inline-block right-[0] bottom-10 text-gray-800 z-0 rotate-[20deg] opacity-50" />
@@ -98,7 +124,7 @@ export default function LandingPage() {
         <ConnectButton />
       )}
 
-      <section className="text-center mt-16 max-w-xl">
+      {/* <section className="text-center mt-16 max-w-xl">
         <h3 className="text-2xl font-bold text-[#FF5159]">
           Mint Your Roast as an NFT
         </h3>
@@ -110,11 +136,11 @@ export default function LandingPage() {
         <Button className="bg-[#FF5159] hover:bg-red-600 text-white mt-6 rounded-full px-6 py-2 shadow-lg">
           Mint Now
         </Button>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="text-center text-gray-500 text-sm mt-20">
-        Made with ❤️ by OnlyRoasts
+        Made with 🔥 by OnlyRoasts
       </footer>
     </div>
   );

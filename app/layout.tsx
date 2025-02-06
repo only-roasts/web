@@ -29,9 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="">
-      <body
-        className={`${londrina.className} bg-gradient-to-b from-blue-50 to-blue-100`}
-      >
+      <body className={`${londrina.className} `}>
         <PrivyProvider
           appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
           config={privyConfig}
