@@ -13,7 +13,7 @@ interface RoastCardProps {
   name: string;
   showButtons: boolean;
   walletAddress: string;
-  mintNFT: () => void;
+  mintNFT?: () => void;
   castOnWarpcast: () => void;
   share: () => void;
   lit: number; // Added lit prop to the interface
@@ -60,7 +60,7 @@ const RoastCard: React.FC<RoastCardProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
@@ -71,12 +71,10 @@ const RoastCard: React.FC<RoastCardProps> = ({
         <CardContent className="relative p-3 sm:p-4 text-center z-10">
           {/* Roastee name */}
           <div className="flex justify-between items-center mb-3 border pr-3 rounded-lg bg-[#ffffffaa]">
-            <Image
-              src="/logo.png"
+            <img
+              src="/logo.png "
               alt="OnlyRoasts Logo"
-              height={80}
-              width={80}
-              className="object-cover"
+              className="object-cover h-12 rounded-l-lg"
             />
 
             <div className="flex items-center gap-1">
@@ -94,7 +92,7 @@ const RoastCard: React.FC<RoastCardProps> = ({
           {/* Roast text with text shadow */}
 
           <motion.div
-            className={`text-base sm:text-xl bg-[#fff] text-black text-start py-3 ${bangers.className}`}
+            className={`text-2xl  bg-[#fff] text-black text-start py-3`}
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
@@ -102,7 +100,7 @@ const RoastCard: React.FC<RoastCardProps> = ({
             &quot; {roast} &quot;
           </motion.div>
 
-          {showButtons ? (
+          {showButtons == true ? (
             <div className="mt-4 sm:mt-5 flex justify-around space-x-3 overflow-x-auto hide-scrollbar py-3">
               <Button
                 onClick={mintNFT}
