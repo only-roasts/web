@@ -1,99 +1,121 @@
 "use client";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Flame } from "lucide-react";
+import { FaEthereum } from "react-icons/fa";
+import { IoIosArrowDropright } from "react-icons/io";
+import ConnectButton from "@/components/ConnectButton";
 
-import { useState } from "react";
-import axios from "axios";
+import Image from "next/image";
 import RoastCard from "@/components/RoastCard";
+import { usePrivy } from "@privy-io/react-auth";
 
-export default function Home() {
-  const [imageURL, setImageURL] = useState("");
-  const [jsonURL, setJsonURL] = useState("");
-  // const [uploading, setUploading] = useState(false);
+const roastData = [
+  {
+    roast: "You’ve spent more on gas fees than on your coffee this month! ☕",
+    walletAddress: "0x1234567890",
+    flameCount: 3,
+  },
+];
 
-  const roastData = [
-    {
-      roast: "You’ve spent more on gas fees than on your coffee this month! ☕",
-      walletAddress: "0x1234567890",
-      flameCount: 3,
-    },
-  ];
-
-  const getRoastImage = async (
-    roast: string,
-    walletAddress: string,
-    flameCount: number
-  ) => {
-    try {
-      const response = await axios.post("/api/generate-image", {
-        roast,
-        walletAddress,
-        flameCount,
-      });
-
-      const { image } = response.data;
-      return image;
-    } catch (e) {
-      console.log(e);
-      alert("Trouble generating image");
-    }
-  };
-
-  const mintNFT = async () => {
-    try {
-      //setUploading(true);
-      const roastImage = await getRoastImage(
-        roastData[0].roast,
-        roastData[0].walletAddress,
-        roastData[0].flameCount
-      );
-
-      setImageURL(roastImage);
-      // const response = await axios.post("/api/files", {
-      //   roastImage,
-      // });
-
-      // const { image, json } = response.data;
-      // setImageURL(image);
-      setJsonURL("");
-      //setUploading(false);
-    } catch (e) {
-      console.log(e);
-      //setUploading(false);
-      alert("Trouble uploading file");
-    }
-  };
-
-  console.log(imageURL);
+export default function LandingPage() {
+  const { login, logout, ready, authenticated, user } = usePrivy(); // Get authentication state
 
   return (
-    <main className="w-full min-h-screen m-auto  flex flex-col justify-center items-center">
-      <RoastCard
-        roast={roastData[0].roast}
-        name="YourName"
-        showButtons={true}
-        walletAddress={roastData[0].walletAddress}
-        lit={roastData[0].flameCount}
-        mintNFT={mintNFT}
-        castOnWarpcast={() => {}}
-        share={() => {}}
-      />
-      {imageURL && (
-        <img
-          src={`data:image/png;base64,${imageURL}`}
-          alt="Image from Pinata IPFS"
-          className="w-fit h-fit"
+    <div className="  flex flex-col items-center p-5">
+      {/* Header */}
+      <FaEthereum className="absolute w-72 h-72 inline-block left-[0px] text-gray-800  rotate-[-25deg] opacity-30" />
+      <FaEthereum className="absolute w-96 h-96 inline-block right-[0] bottom-10 text-gray-800 z-0 rotate-[20deg] opacity-50" />
+
+      <div className=" relative text-5xl text-[#FF5159] font-bold flex  mt-10  ml-5">
+        <p>Only</p>
+        <Flame className=" w-12 h-12 inline-block  " />
+        <p>Roasts</p>
+      </div>
+      <p className="text-xl text-gray-700 mt-4  ml-5">
+        Where Blockchain Meets Savage Humor
+      </p>
+
+      <h2 className="text-[40px] font-bold text-center text-gray-800 mt-10 uppercase tracking-wide ">
+        Connect a Wallet to Get Roasted
+      </h2>
+
+      {/* Step Section */}
+      <section className="mt-5 bg-white shadow-xl py-2 pl-3 pr-5 rounded-full  w-fit uppercase  tracking-wide mb-10">
+        <div className="flex justify-evenly items-center gap-3">
+          {/* Step 1 */}
+          <div
+            className={`flex items-center gap-2 ${
+              authenticated ? "" : "opacity-50"
+            }`}
+          >
+            <span className="flex justify-center items-center h-7 w-7 rounded-full bg-[#FF5159] text-white font-bold">
+              1
+            </span>
+            <p className="text-gray-700 font-semibold text-sm">Link Wallets</p>
+          </div>
+
+          <IoIosArrowDropright className="w-7 h-7 opacity-50" />
+
+          {/* Step 2 */}
+          <div
+            className={`flex items-center gap-2 ${
+              authenticated ? "" : "opacity-50"
+            }`}
+          >
+            <span className="flex justify-center items-center h-7 w-7 rounded-full bg-[#FF5159] text-white font-bold">
+              2
+            </span>
+            <p className="text-gray-700 font-semibold text-sm">Get Roasted</p>
+          </div>
+
+          <IoIosArrowDropright className="w-7 h-7 opacity-50" />
+
+          {/* Step 3 */}
+          <div className="flex  items-center gap-2 opacity-50">
+            <span className="flex justify-center items-center h-7 w-7 rounded-full bg-[#FF5159] text-white font-bold">
+              3
+            </span>
+            <p className="text-gray-700 font-semibold text-sm">
+              Share with Friends
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {authenticated ? (
+        <RoastCard
+          roast={roastData[0].roast}
+          name={"YourName"}
+          showButtons={false}
+          walletAddress={user?.wallet?.address!}
+          lit={roastData[0].flameCount}
+          castOnWarpcast={() => {}}
+          share={() => {}}
         />
+      ) : (
+        <ConnectButton />
       )}
 
-      {jsonURL && (
-        <a
-          href={jsonURL}
-          target="_blank"
-          rel="noreferrer"
-          className="text-blue-500"
-        >
-          View JSON
-        </a>
-      )}
-    </main>
+      <section className="text-center mt-16 max-w-xl">
+        <h3 className="text-2xl font-bold text-[#FF5159]">
+          Mint Your Roast as an NFT
+        </h3>
+        <p className="text-gray-700 mt-2">
+          Share your savage roast on social media or create unique Farcaster
+          frames for others to get their own roasts.
+        </p>
+
+        <Button className="bg-[#FF5159] hover:bg-red-600 text-white mt-6 rounded-full px-6 py-2 shadow-lg">
+          Mint Now
+        </Button>
+      </section>
+
+      {/* Footer */}
+      <footer className="text-center text-gray-500 text-sm mt-20">
+        Made with ❤️ by OnlyRoasts
+      </footer>
+    </div>
   );
 }
