@@ -4,6 +4,7 @@ import z from "zod";
 import { user } from "@covalenthq/ai-agent-sdk/dist/core/base";
 import "dotenv/config";
 import { StateFn } from "@covalenthq/ai-agent-sdk/dist/core/state";
+//@ts-expect-error Type exists in the openai package
 import type { ChatCompletionAssistantMessageParam } from "openai/resources";
 import { runToolCalls } from "./base";
 
@@ -62,11 +63,10 @@ export async function GET(
     }),
     execute: async (_args) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      console.log("transaction success")
+      console.log("transaction success");
       return `Transaction successful! ${_args.amount} Sepolia ETH sent to ${_args.to}`;
     },
   });
-
 
   const greetingTool = createTool({
     id: "greeting-tool",
@@ -74,11 +74,10 @@ export async function GET(
     schema: z.object({}),
     execute: async (_args) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      console.log("hi hacker")
+      console.log("hi hacker");
       return `greeting tool execution has been completed`;
     },
   });
-
 
   const agent = new Agent({
     name: "transaction agent",
@@ -90,31 +89,36 @@ export async function GET(
       "You are a blockchain transaction agent that helps users send Sepolia ETH",
     instructions: [
       "Use the transaction tool to send Sepolia ETH to another address",
-      "Use the greeting tool to send hi to the user when user says hi"
+      "Use the greeting tool to send hi to the user when user says hi",
     ],
-    tools: { "transaction-tool": transactionTool, "greeting-tool": greetingTool }
-
+    tools: {
+      "transaction-tool": transactionTool,
+      "greeting-tool": greetingTool,
+    },
   });
 
   const state = StateFn.root(agent.description);
   state.messages.push(
     user(
-        " recipient's address : 0x5352b10D192475cA7Fa799e502c29Ab3AA28657F, amount of Sepolia ETH: 0.1"
-        //"hi"
+      " recipient's address : 0x5352b10D192475cA7Fa799e502c29Ab3AA28657F, amount of Sepolia ETH: 0.1"
+      //"hi"
     )
   );
 
   const result = await agent.run(state);
   const toolCall = result.messages[
     result.messages.length - 1
-] as ChatCompletionAssistantMessageParam;
+  ] as ChatCompletionAssistantMessageParam;
 
-
-//const toolResponses = await runToolCalls(tools, toolCall?.tool_calls ?? []);
-console.log(toolCall?.tool_calls);   //to see ai called tool
-const toolResponses = await runToolCalls({"greeting-tool":greetingTool,"transaction-tool":transactionTool},toolCall?.tool_calls ?? []);  //map which tool called by ai
- console.log(toolResponses);
-const params = await context.params;
+  //const toolResponses = await runToolCalls(tools, toolCall?.tool_calls ?? []);
+  console.log(toolCall?.tool_calls); //to see ai called tool
+  const toolResponses = await runToolCalls(
+    //@ts-expect-error Tools are defined
+    { "greeting-tool": greetingTool, "transaction-tool": transactionTool },
+    toolCall?.tool_calls ?? []
+  ); //map which tool called by ai
+  console.log(toolResponses);
+  const params = await context.params;
 
   const address = params.id;
 

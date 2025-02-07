@@ -8,7 +8,7 @@ let intervalId: NodeJS.Timeout | null = null;
 
 const alreadyCasted: string[] = [];
 
-export async function startBot() {
+async function startBot() {
   if (intervalId) {
     console.log("Bot is already running.");
     return;
@@ -22,7 +22,7 @@ export async function startBot() {
 }
 
 // Function to stop the bot
-export function stopBot() {
+function stopBot() {
   if (intervalId) {
     clearInterval(intervalId);
     intervalId = null;

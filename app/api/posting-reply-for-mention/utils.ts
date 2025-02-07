@@ -78,7 +78,7 @@ export const sendCast = async (
     };
 
     const castAddReq = await makeCastAdd(castBody, dataOptions, ed25519Signer);
-    const castAdd: any = castAddReq._unsafeUnwrap();
+    const castAdd = castAddReq._unsafeUnwrap();
     const messageBytes = Buffer.from(Message.encode(castAdd).finish());
 
     // Make API request
