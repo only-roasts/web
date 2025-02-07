@@ -12,7 +12,9 @@ const interLight = fs.readFileSync(join(FONT_DIR, "Inter-Light.ttf"));
 export const generateRoastCardImage = async (
   roast: string,
   walletAddress: string,
-  flameCount: number
+  flameCount: number,
+  litCount: number,
+  dropletCount: number
 ) => {
   // Flame rendering without images (vector-based instead)
   // const renderFlames = () => {
@@ -42,9 +44,11 @@ export const generateRoastCardImage = async (
       <div tw=" flex">
         <div tw="flex flex-1">
           <img
-            src="https://cdn.dribbble.com/users/1172818/screenshots/8111167/media/7cc8ff70b93ab4e470f027ec80de7941.png"
+            src="http://localhost:3001/logo.png"
             alt="OnlyRoasts Logo"
             tw="object-cover w-full h-full"
+            height={50}
+            width={50}
           />
         </div>
 
@@ -60,6 +64,8 @@ export const generateRoastCardImage = async (
           src={`${process.env.NEXT_PUBLIC_URL}flame1-min.png`}
           alt="Flames"
           tw="object-cover mix-blend-overlay h-full w-full"
+          height={50}
+          width={50}
         />
       </div>
 
@@ -87,7 +93,7 @@ export const generateRoastCardImage = async (
             >
               <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
             </svg>
-            <span>{flameCount}</span>
+            <span>{litCount}</span>
           </div>
 
           {/* Droplet Button with blue gradient */}
@@ -107,7 +113,7 @@ export const generateRoastCardImage = async (
             >
               <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" />
             </svg>
-            <span>15</span>
+            <span>{dropletCount}</span>
           </div>
         </div>
       </div>

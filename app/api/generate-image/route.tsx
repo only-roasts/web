@@ -1,24 +1,30 @@
 import { NextResponse, NextRequest } from "next/server";
 import { generateRoastCardImage } from "./utils";
+import { useReadContract } from "wagmi";
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    const { roast, walletAddress, flameCount } = data;
-    const image = await generateRoastCardImage(
+    const { roast, walletAddress, litCount, dropletCount, tokenID } = data;
+
+    let image;
+
+    image = await generateRoastCardImage(
       roast,
       walletAddress,
-      flameCount
+      Number(litCount),
+      Number(litCount),
+      Number(dropletCount)
     );
 
     return NextResponse.json(
       {
-        image,
+        pngBuffer: image,
       },
       { status: 200 }
     );
   } catch (e) {
-    console.log(e);
+    console.error("Error:", e);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

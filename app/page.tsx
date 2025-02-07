@@ -13,6 +13,9 @@ import { useEffect, useState } from "react";
 import RoastCard from "@/components/RoastCard";
 import { usePrivy } from "@privy-io/react-auth";
 import PartnerPrizesComponent from "@/components/PartnerPrizesComponent";
+import axios from "axios";
+import { abi, address } from "@/lib/OnlyRoastNFTContract";
+import { useReadContract } from "wagmi";
 
 const roastData = [
   {
@@ -26,6 +29,28 @@ export default function LandingPage() {
   const { login, logout, ready, authenticated, user } = usePrivy(); // Get authentication state
 
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  const tokenID = 0;
+
+  const litCount = useReadContract({
+    chainId: 84532,
+    abi,
+    address,
+    functionName: "getLitCount",
+    args: [BigInt(tokenID)],
+  }).data;
+
+  // setLitCount(litCount);
+
+  const dropletCount = useReadContract({
+    chainId: 84532,
+    abi,
+    address,
+    functionName: "getDropCount",
+    args: [BigInt(tokenID)],
+  }).data;
+
+  // setDropletCount(dropletCount);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,6 +73,24 @@ export default function LandingPage() {
       setRunConfetti(false);
     }, 5000);
   }, []);
+
+  const gen = async () => {
+    const genImageResponse = await axios.post("/api/generate-image", {
+      roast: "You’ve spent more on gas fees than on your coffee this month! ☕",
+      walletAddress: "0x1234567890",
+      litCount: litCount?.toString(),
+      dropletCount: dropletCount?.toString(),
+    });
+
+    const { pngBuffer } = genImageResponse.data;
+
+    const uploadMetadataResponse = await axios.post("/api/upload-metadata", {
+      pngBuffer,
+      tokenID: 0,
+    });
+
+    const { cid } = uploadMetadataResponse.data;
+  };
 
   return (
     <div className="flex flex-col items-center pt-5 pb-28">
@@ -126,6 +169,13 @@ export default function LandingPage() {
       ) : (
         <ConnectButton />
       )}
+
+      <button
+        onClick={() => gen()}
+        className="bg-[#FF5159] hover:bg-red-600 text-white mt-6 rounded-full px-6 py-2 shadow-lg"
+      >
+        Generate Roast
+      </button>
 
       {/* <section className="text-center mt-16 max-w-xl">
         <h3 className="text-2xl font-bold text-[#FF5159]">
