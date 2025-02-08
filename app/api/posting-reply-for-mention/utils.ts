@@ -49,7 +49,7 @@ const SIGNED_KEY_REQUEST_TYPE = [
   { name: "deadline", type: "uint256" },
 ] as const;
 
-export const sendCast = async (
+export const sendMentionCast = async (
   cid: string,
   message: string,
   parentUrl: string,
@@ -166,8 +166,11 @@ export const signInWithWarpcast = async () => {
   return user;
 };
 
-export const getPinataMetadataCID = async (fid: number | undefined) => {
-  // const roastData = await getRoastData(fid);
+export const getPinataMetadataCID = async (
+  address: string,
+  tokenID: number
+) => {
+  // const roastData = await getRoastData(address);
 
   const roastData = {
     roast: "You’ve spent more on gas fees than on your coffee this month! ☕",
@@ -191,7 +194,7 @@ export const getPinataMetadataCID = async (fid: number | undefined) => {
     `${getWebURL()}/api/upload-metadata`,
     {
       pngBuffer: roastImage,
-      tokenID: 16,
+      tokenID,
       roastNFTData,
     }
   );
@@ -200,13 +203,7 @@ export const getPinataMetadataCID = async (fid: number | undefined) => {
   return { cid, roastData };
 };
 
-export const getRoastData = async (fid: number | undefined) => {
-  const addressResponse = await axios.get(
-    `${getWebURL()}/api/getEthereumAddressByFid/${fid}`
-  );
-
-  const address = addressResponse.data.address;
-
+export const getRoastData = async (address: string) => {
   const roastResponse = await axios.get(
     `${getWebURL()}/api/generate-roast/${address}`
   );

@@ -3,34 +3,46 @@ import { pinata } from "@/lib/config";
 
 export async function POST(request: NextRequest) {
   try {
-    const { pngBuffer, tokenID } = await request.json();
+    const { roastNFTData, pngBuffer, tokenID } = await request.json();
     const file = Buffer.from(pngBuffer, "base64");
-    const fileObject = new File([file], `image/${tokenID}.png`, {
+    const fileObject = new File([file], `${tokenID}.png`, {
       type: "image/png",
     });
     const uploadImageData = await pinata.upload.file(fileObject);
-    const imageURL = `https://white-official-scallop-559.mypinata.cloud/ipfs/${uploadImageData.IpfsHash}/${tokenID}.png`;
+    const imageURL = `https://white-official-scallop-559.mypinata.cloud/ipfs/${uploadImageData.IpfsHash}`;
 
     const uploadJsonData = await pinata.upload
       .json({
-        name: "NewGrayson",
-        description: "Invincible",
-        external_url: "https://pinata.cloud",
+        name: `OnlyRoasts #${tokenID}`,
+        description:
+          "A savage roast generated based on your blockchain transaction history.",
         image: imageURL,
-
+        external_url: "https://onlyroasts.com/mint/1",
         attributes: [
           {
-            trait_type: "Lit",
-            value: 10,
+            trait_type: "Wallet Status",
+            value: roastNFTData.walletStatus,
           },
           {
-            trait_type: "Creator",
-            value: "YourName",
+            trait_type: "ETH Spent",
+            value: roastNFTData.ethSpent,
+          },
+          {
+            trait_type: "Roast",
+            value: roastNFTData.roast,
+          },
+          {
+            trait_type: "Roast Intensity",
+            value: roastNFTData.intensity,
+          },
+          {
+            trait_type: "Advice",
+            value: roastNFTData.advice,
           },
         ],
       })
       .addMetadata({
-        name: `metadata/${tokenID}`,
+        name: `${tokenID}.json`,
       });
 
     return NextResponse.json(
