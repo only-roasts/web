@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import "./Chatbox.css";
-
+import { get_data_from_covalent } from "./botinteractions";
+import axios from "axios";
 interface Message {
   text: string;
   sender: "user" | "ai";
@@ -20,13 +21,15 @@ const Chatbox: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
-    // Simulating an fake AI response (replace this with actual Covalent API call)
-    setTimeout(() => {
-      const aiMessage: Message = { text: "This is an AI response.", sender: "ai" };
+    // call to covalent
+
+      const response=await axios.get(`api/botinteraction/${userMessage.text}`)
+      const ai_response=response.data.result.message;
+      const aiMessage: Message = { text:ai_response , sender: "ai" };
       setMessages((prev) => [...prev, aiMessage]);
       setLoading(false); 
-    }, 1000);
-  };
+    }
+  
 
   return (
     <div className="chat-container">
