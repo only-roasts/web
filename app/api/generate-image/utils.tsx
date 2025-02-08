@@ -1,3 +1,4 @@
+import { getWebURL } from "@/lib/utils";
 import * as fs from "fs";
 import { join } from "path";
 import satori from "satori";
@@ -26,7 +27,7 @@ export const generateRoastCardImage = async (
   //         style={{
   //           width: 300,
   //           height: 300,
-  //           backgroundImage: `url('${process.env.NEXT_PUBLIC_URL}flame1-min.png')`,
+  //           backgroundImage: `url('${getWebURL()}/flame1-min.png')`,
   //           opacity: 0.6,
   //           position: "absolute",
   //           top: `${50 + i * 10}px`,
@@ -61,7 +62,7 @@ export const generateRoastCardImage = async (
       {/* Render flames based on the 'lit' value */}
       <div tw="absolute flex top-0 z-0">
         <img
-          src={`${process.env.NEXT_PUBLIC_URL}flame1-min.png`}
+          src={`${getWebURL()}/flame1-min.png`}
           alt="Flames"
           tw="object-cover mix-blend-overlay h-full w-full"
           height={50}
