@@ -79,7 +79,7 @@ export const sendMentionCast = async (
       type: CastType.CAST,
       text: message,
       embeds: [
-        { url: `https://only-roasts-frame.vercel.app/api/initial/${cid}` },
+        { url: `https://only-roasts-frame.vercel.app/api/postedByBot/${cid}` },
       ],
       embedsDeprecated: [],
       mentions: [mentionedFid, parentCastFid],
@@ -188,10 +188,7 @@ export const updateSupabaseTable = async (cast_hash: string) => {
   return error;
 };
 
-export const getPinataMetadataCID = async (
-  address: string,
-  tokenID: number
-) => {
+export const getPinataMetadataCID = async (address: string) => {
   const roastData = await getRoastData(address);
 
   // const roastData = {
@@ -216,7 +213,6 @@ export const getPinataMetadataCID = async (
     `${getWebURL()}/api/upload-metadata`,
     {
       pngBuffer: roastImage,
-      tokenID,
       roastNFTData,
     }
   );

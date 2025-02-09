@@ -54,8 +54,7 @@ async function checkAndPostMentions() {
             `${getWebURL()}/api/getEthereumAddressByFid/${cast.data.fid}`
           );
           const { cid } = await getPinataMetadataCID(
-            cast.data.castAddBody.mentions[1],
-            89
+            cast.data.castAddBody.mentions[1]
           );
 
           const callerFid = cast.data.fid;

@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     const address = randomTransaction.from_address;
 
-    const { cid } = await getPinataMetadataCID(address, 96);
+    const { cid } = await getPinataMetadataCID(address);
     sendDailyCast(
       cid,
       `---# ROAST OF THE DAY #--- ${address} just got roasted by our ai agent. Tag your friend to roast them too about their transactions onchain.`
@@ -78,7 +78,7 @@ export const sendDailyCast = async (cid: string, message: string) => {
       type: CastType.CAST,
       text: message,
       embeds: [
-        { url: `https://only-roasts-frame.vercel.app/api/initial/${cid}` },
+        { url: `https://only-roasts-frame.vercel.app/api/postedByBot/${cid}` },
       ],
       embedsDeprecated: [],
       mentions: [],
