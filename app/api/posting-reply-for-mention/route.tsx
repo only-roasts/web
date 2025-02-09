@@ -2,7 +2,12 @@ import { makeCastAdd, CastType } from "@farcaster/hub-nodejs";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { WarpcastPayload } from "pinata-fdk";
-import { sendCast, signInWithWarpcast } from "./utils";
+import {
+  getPinataMetadataCID,
+  sendMentionCast,
+  signInWithWarpcast,
+} from "./utils";
+import { getWebURL } from "@/lib/utils";
 
 let intervalId: NodeJS.Timeout | null = null;
 
@@ -43,10 +48,22 @@ async function checkAndPostMentions() {
     for (const cast of casts) {
       try {
         if (!alreadyCasted.includes(cast.hash)) {
-          const result = await sendCast(
-            "---# ROAST OF THE DAY #--- \n This you? , lol you just got roasted by our ai agent. Tag your friend to roast them too about their transactions onchain.",
+          const addressResponse = await axios.get(
+            `${getWebURL()}/api/getEthereumAddressByFid/${cast.data.fid}`
+          );
+          const { cid } = await getPinataMetadataCID(
+            addressResponse.data.address,
+            67
+          );
+          const callerFid = cast.data.fid;
+          const mentionedFid = cast.data.castAddBody.mentions[1];
+          const result = await sendMentionCast(
+            cid,
+            "This you? , lol you just got roasted by your friend . Tag your friend to roast them too about their transactions onchain.",
             cast.hash,
-            cast.data.fid
+            callerFid,
+            mentionedFid,
+            [10, 52]
           );
           alreadyCasted.push(cast.hash);
         } else {

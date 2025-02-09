@@ -15,6 +15,8 @@ import {
 import { hexToBytes } from "@noble/hashes/utils";
 import * as ed from "@noble/ed25519";
 import { mnemonicToAccount } from "viem/accounts";
+import { getWebURL } from "@/lib/utils";
+import axios from "axios";
 
 type FarcasterUser = {
   signature: string;
@@ -47,10 +49,13 @@ const SIGNED_KEY_REQUEST_TYPE = [
   { name: "deadline", type: "uint256" },
 ] as const;
 
-export const sendCast = async (
+export const sendMentionCast = async (
+  cid: string,
   message: string,
   parentUrl: string,
-  parentCastFid: number
+  parentCastFid: number,
+  mentionedFid: number,
+  mentionsPositions: [number, number]
 ) => {
   try {
     const dataOptions = {
@@ -67,10 +72,12 @@ export const sendCast = async (
     const castBody = {
       type: CastType.CAST,
       text: message,
-      embeds: [{ url: "https://only-roasts-frame.vercel.app/api/inital/baf" }],
+      embeds: [
+        { url: `https://only-roasts-frame.vercel.app/api/initial/${cid}` },
+      ],
       embedsDeprecated: [],
-      mentions: [parentCastFid],
-      mentionsPositions: [40],
+      mentions: [parentCastFid, mentionedFid],
+      mentionsPositions,
       parentCastId: {
         hash: castHashBytes,
         fid: parentCastFid,
@@ -157,4 +164,72 @@ export const signInWithWarpcast = async () => {
     status: "pending_approval",
   };
   return user;
+};
+
+export const getPinataMetadataCID = async (
+  address: string,
+  tokenID: number
+) => {
+  // const roastData = await getRoastData(address);
+
+  const roastData = {
+    roast: "You’ve spent more on gas fees than on your coffee this month! ☕",
+    walletAddress: "0x1234567890",
+    flameCount: 0,
+    litCount: 0,
+    dropletCount: 0,
+  };
+
+  const roastImage = await getRoastImage(roastData);
+
+  const roastNFTData = {
+    walletStatus: "Defi Degenerate",
+    ethSpent: 0,
+    roast: roastData.roast,
+    intensity: "Mild",
+    advice: "You should probably stop trading on Uniswap.",
+  };
+
+  const uploadMetadataResponse = await axios.post(
+    `${getWebURL()}/api/upload-metadata`,
+    {
+      pngBuffer: roastImage,
+      tokenID,
+      roastNFTData,
+    }
+  );
+
+  const cid = uploadMetadataResponse.data.cid;
+  return { cid, roastData };
+};
+
+export const getRoastData = async (address: string) => {
+  const roastResponse = await axios.get(
+    `${getWebURL()}/api/generate-roast/${address}`
+  );
+  console.log(roastResponse.data.roast);
+
+  const roastData = {
+    roast: roastResponse.data.roast,
+    walletAddress: address,
+    flameCount: 0,
+    litCount: 0,
+    dropletCount: 0,
+  };
+  return roastData;
+};
+
+export const getRoastImage = async (roastData: any) => {
+  const roastImageResponse = await axios.post(
+    `${getWebURL()}/api/generate-image`,
+    {
+      roast: roastData.roast,
+      walletAddress: roastData.walletAddress,
+      flameCount: roastData.flameCount,
+      litCount: roastData.litCount,
+      dropletCount: roastData.dropletCount,
+    }
+  );
+
+  return roastImageResponse.data.pngBuffer;
 };
