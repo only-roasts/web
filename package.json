@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@covalenthq/ai-agent-sdk": "^0.2.2",
-    "@duneanalytics/client-sdk": "^0.2.5",
+    "@covalenthq/client-sdk": "^2.2.3",
     "@farcaster/hub-nodejs": "^0.12.7",
     "@noble/ed25519": "^2.2.3",
     "@privy-io/react-auth": "^2.2.1",

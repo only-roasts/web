@@ -3,10 +3,11 @@
     flex-direction: column;
     width: 800px;
     margin: auto;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
     margin-top:300px;
+    
   }
   
   .chatbox {
@@ -25,7 +26,7 @@
   }
   
   .user {
-    background-color: #007bff;
+    background-color: #FF5159;
     color: white;
     align-self: flex-end;
   }
@@ -52,8 +53,18 @@
   button {
     padding: 10px;
     border: none;
-    background: #007bff;
+    background: #FF5159;
     color: white;
     cursor: pointer;
+  }
+  .secret-container{
+    display: grid;
+    place-items: center;
+    margin-top: 50px;
+    font-size: 30px;
+    font-weight: 400;
+  }
+  .claim{
+    margin-bottom: 20px;
   }
   

@@ -4,6 +4,8 @@ import "./Chatbox.css";
 import axios from "axios";
 import { FaEthereum } from "react-icons/fa";
 import { useSendBaseToken } from "./transfer";
+import ImageGenerator from "../venice/page";
+import ConnectButton from "@/components/ConnectButton";
 
 interface Message {
   text: string;
@@ -14,8 +16,9 @@ const Chatbox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const { sendBaseToken, transactionHash, isConfirmed } = useSendBaseToken(); // ✅ Track transaction status
+  const { sendBaseToken, transactionHash, isConfirmed } = useSendBaseToken(); 
   const [lastConfirmedHash, setLastConfirmedHash] = useState<string | null>(null);
+  const [hasTransacted, setHasTransacted] = useState<boolean>(false); 
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -28,6 +31,7 @@ const Chatbox: React.FC = () => {
     // Call backend API
     const response = await axios.get(`api/botinteraction/${userMessage.text}`);
     const ai_response = response.data.result.message;
+    console.log(ai_response);
 
     if (response.data.result.tool) {
       const transaction_result = await sendBaseToken(
@@ -45,10 +49,11 @@ const Chatbox: React.FC = () => {
     setLoading(false);
   };
 
-  // ✅ Once transaction is confirmed, update chat
+  
   useEffect(() => {
     if (isConfirmed && transactionHash && transactionHash !== lastConfirmedHash) {
-      setLastConfirmedHash(transactionHash); // ✅ Store the last confirmed transaction
+      setLastConfirmedHash(transactionHash); 
+      setHasTransacted(true); 
   
       const confirmedMessage: Message = {
         text: `✅ Transaction confirmed! Tx Hash: ${transactionHash}`,
@@ -60,8 +65,7 @@ const Chatbox: React.FC = () => {
 
   return (
     <>
-      <FaEthereum className="absolute w-72 h-72 inline-block left-[0px] text-gray-800 rotate-[-25deg] opacity-30" />
-      <FaEthereum className="absolute w-96 h-96 inline-block right-[0] bottom-10 text-gray-800 z-0 rotate-[20deg] opacity-50" />
+      <ConnectButton/>
       <div className="chat-container">
         <div className="chatbox">
           {messages.map((msg, index) => (
@@ -83,6 +87,19 @@ const Chatbox: React.FC = () => {
           </button>
         </div>
       </div>
+
+      
+      {hasTransacted && (
+        <div>
+          <div className="secret-container">
+            🎉 Congratulations! You have completed your first transaction! 🎉
+          </div>
+          <div className="secret-container claim">
+            Now claim your character card based on your transactions
+          </div>
+          <ImageGenerator/>
+        </div>
+      )}
     </>
   );
 };
