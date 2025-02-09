@@ -35,17 +35,15 @@ const RoastCard: React.FC<RoastCardProps> = ({
   cid,
 }) => {
   const mintNFT = async () => {
-    console.log("Minting NFT");
-
-    const { writeContract } = useWriteContract();
-
-    const data = await writeContract({
-      address: address,
-      abi: abi,
-      functionName: "safeMint",
-      //@ts-expect-error
-      args: [walletAddress, cid],
-    });
+    // console.log("Minting NFT");
+    // const { writeContract } = useWriteContract();
+    // const data = await writeContract({
+    //   address: address,
+    //   abi: abi,
+    //   functionName: "safeMint",
+    //   //@ts-expect-error - TS doesn't like the args array
+    //   args: [walletAddress, cid],
+    // });
   };
 
   // Render flames based on the 'lit' value

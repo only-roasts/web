@@ -16,24 +16,23 @@ import { hexToBytes } from "@noble/hashes/utils";
 import axios from "axios";
 import { getWebURL } from "@/lib/utils";
 
-var cron = require("node-cron");
+import cron from "node-cron";
 
 export async function POST(req: NextRequest) {
   try {
-    // cron.schedule("@daily", async () => {
-    console.log("# Running scheduler daily#");
+    cron.schedule("@daily", async () => {
+      console.log("# Running scheduler daily#");
 
-    const randomTransaction = await getRandomTransactionOfTheDay();
+      const randomTransaction = await getRandomTransactionOfTheDay();
 
-    const address = randomTransaction.from_address;
+      const address = randomTransaction.from_address;
 
-    const { cid } = await getPinataMetadataCID(address);
-    sendDailyCast(
-      cid,
-      `---# ROAST OF THE DAY #--- ${address} just got roasted by our ai agent. Tag your friend to roast them too about their transactions onchain.`
-    );
-
-    // });
+      const { cid } = await getPinataMetadataCID(address);
+      sendDailyCast(
+        cid,
+        `---# ROAST OF THE DAY #--- ${address} just got roasted by our ai agent. Tag your friend to roast them too about their transactions onchain.`
+      );
+    });
 
     return NextResponse.json({ data: "Success", status: 200 });
   } catch (error) {

@@ -31,7 +31,7 @@ export default function LandingPage() {
   const [roastGenrationStarted, setRoastGenerationStarted] = useState(false);
   const [roastData, setRoastData] = useState<
     | {
-        roast: any;
+        roast: string;
         walletAddress: string;
         flameCount: number;
         litCount: number;
@@ -66,8 +66,11 @@ export default function LandingPage() {
   const gen = async () => {
     setRoastGenerationStarted(true);
 
+    if (!user?.wallet?.address) {
+      throw new Error("Wallet address is not defined");
+    }
     const { cid, roastData, tokenId } = await getPinataMetadataCID(
-      user?.wallet?.address!
+      user.wallet.address
     );
     setCID(cid);
     setTokenID(tokenId);
@@ -189,7 +192,7 @@ export default function LandingPage() {
         <RoastCard
           roast={roastData?.roast}
           showButtons={true}
-          walletAddress={user?.wallet?.address!}
+          walletAddress={user?.wallet?.address || ""}
           lit={3}
           tokenId={tokenId}
           cid={cid}

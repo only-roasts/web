@@ -240,7 +240,13 @@ export const getRoastData = async (address: string) => {
   return roastData;
 };
 
-export const getRoastImage = async (roastData: any) => {
+export const getRoastImage = async (roastData: {
+  roast: string;
+  walletAddress: string;
+  flameCount: number;
+  litCount: number;
+  dropletCount: number;
+}) => {
   const roastImageResponse = await axios.post(
     `${getWebURL()}/api/generate-image`,
     {

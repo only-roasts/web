@@ -7,9 +7,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
     const { roast, walletAddress, litCount, dropletCount, tokenID } = data;
 
-    let image;
-
-    image = await generateRoastCardImage(
+    const image = await generateRoastCardImage(
       roast,
       walletAddress,
       Number(litCount),
