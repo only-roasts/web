@@ -192,15 +192,15 @@ export const getPinataMetadataCID = async (
   address: string,
   tokenID: number
 ) => {
-  // const roastData = await getRoastData(address);
+  const roastData = await getRoastData(address);
 
-  const roastData = {
-    roast: "You’ve spent more on gas fees than on your coffee this month! ☕",
-    walletAddress: "0x1234567890",
-    flameCount: 0,
-    litCount: 0,
-    dropletCount: 0,
-  };
+  // const roastData = {
+  //   roast: "You’ve spent more on gas fees than on your coffee this month! ☕",
+  //   walletAddress: "0x1234567890",
+  //   flameCount: 0,
+  //   litCount: 0,
+  //   dropletCount: 0,
+  // };
 
   const roastImage = await getRoastImage(roastData);
 

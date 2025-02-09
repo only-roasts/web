@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@covalenthq/ai-agent-sdk": "^0.2.2",
+    "@duneanalytics/client-sdk": "^0.2.5",
     "@farcaster/hub-nodejs": "^0.12.7",
     "@noble/ed25519": "^2.2.3",
     "@privy-io/react-auth": "^2.2.1",
@@ -25,6 +26,7 @@
     "framer-motion": "^12.0.6",
     "lucide-react": "^0.474.0",
     "next": "15.1.6",
+    "node-cron": "^3.0.3",
     "openai": "^4.83.0",
     "pinata-fdk": "^3.10.2",
     "pinata-web3": "^0.5.4",
