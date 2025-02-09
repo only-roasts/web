@@ -1,10 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { pinata } from "@/lib/config";
+import { getRoastCount, updateRoastCount } from "./utils";
 
 export async function POST(request: NextRequest) {
   try {
-    const { roastNFTData, pngBuffer, tokenID } = await request.json();
+    const { roastNFTData, pngBuffer } = await request.json();
     const file = Buffer.from(pngBuffer, "base64");
+
+    const tokenID = await getRoastCount();
     const fileObject = new File([file], `${tokenID}.png`, {
       type: "image/png",
     });
@@ -44,6 +47,8 @@ export async function POST(request: NextRequest) {
       .addMetadata({
         name: `${tokenID}.json`,
       });
+
+    await updateRoastCount();
 
     return NextResponse.json(
       {
