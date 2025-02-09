@@ -4,3 +4,10 @@
 .donwload{
     background-color: black;
 }
+.buttoncontainer{
+    display: flex;
+    flex-direction: row;
+    gap:30px;
+    justify-content: center;
+    margin-top: 30px;
+}
