@@ -5,17 +5,23 @@ import { getRoastCount, updateRoastCount } from "./utils";
 export async function POST(request: NextRequest) {
   try {
     const { roastNFTData, pngBuffer } = await request.json();
+
     const file = Buffer.from(pngBuffer, "base64");
 
-    const tokenID = await getRoastCount();
+    const latestRoastCount = await getRoastCount();
+
+    const tokenID = latestRoastCount + 1;
     const fileObject = new File([file], `${tokenID}.png`, {
       type: "image/png",
     });
+
     const uploadImageData = await pinata.upload.file(fileObject);
+
     const imageURL = `https://white-official-scallop-559.mypinata.cloud/ipfs/${uploadImageData.IpfsHash}`;
 
     const uploadJsonData = await pinata.upload
       .json({
+        tokenId: tokenID,
         name: `OnlyRoasts #${tokenID}`,
         description:
           "A savage roast generated based on your blockchain transaction history.",
@@ -57,7 +63,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (e) {
-    console.log(e);
+    console.log("Error:", e);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

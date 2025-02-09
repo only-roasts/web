@@ -13,7 +13,7 @@ export const getRoastCount = async () => {
     throw error;
   }
 
-  return Number(data[0]);
+  return Number(data[0].roast_count);
 };
 
 export const updateRoastCount = async () => {
@@ -21,7 +21,8 @@ export const updateRoastCount = async () => {
 
   const { error } = await supabase
     .from("roast_count_table")
-    .update({ roast_count: latest_roast_count + 1 });
+    .update({ roast_count: latest_roast_count + 1 })
+    .eq("id", 1);
 
   if (error) {
     throw error;
