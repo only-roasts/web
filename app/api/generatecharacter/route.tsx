@@ -81,6 +81,7 @@ The background and character details should visually match their on-chain activi
     state.messages.push(user(user_prompt)); // Add the user transaction data
 
     const result = await agent.run(state);
+    //@ts-expect-error correct type
     const res=extractAssistantReply(result)
 
     return NextResponse.json({ res });

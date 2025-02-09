@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export const getRandomTransactionOfTheDay = async () => {
+const getRandomTransactionOfTheDay = async () => {
   const options = {
     headers: {
       Authorization: `Bearer ${process.env.GOLD_RUSH_API_KEY}`,
@@ -62,7 +62,7 @@ export const getRandomTransactionOfTheDay = async () => {
   return randomTransaction;
 };
 
-export const sendDailyCast = async (cid: string, message: string) => {
+const sendDailyCast = async (cid: string, message: string) => {
   try {
     const dataOptions = {
       fid: FID,
