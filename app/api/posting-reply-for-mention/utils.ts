@@ -18,7 +18,13 @@ import { mnemonicToAccount } from "viem/accounts";
 import { getWebURL } from "@/lib/utils";
 import axios from "axios";
 
-type FarcasterUser = {
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://usfbtwsqfvygdatpcmyw.supabase.co";
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey!);
+
+export type FarcasterUser = {
   signature: string;
   requestFid: number;
   deadline: number;
@@ -30,20 +36,20 @@ type FarcasterUser = {
   status: string;
 };
 
-const FID = process.env.FARCASTER_DEVELOPER_FID
+export const FID = process.env.FARCASTER_DEVELOPER_FID
   ? parseInt(process.env.FARCASTER_DEVELOPER_FID)
   : 0;
 
-const SIGNER = process.env.FARCASTER_PRIVATE_KEY || "";
+export const SIGNER = process.env.FARCASTER_PRIVATE_KEY || "";
 
-const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {
+export const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {
   name: "Farcaster SignedKeyRequestValidator",
   version: "1",
   chainId: 10,
   verifyingContract: "0x00000000fc700472606ed4fa22623acf62c60553",
 } as const;
 
-const SIGNED_KEY_REQUEST_TYPE = [
+export const SIGNED_KEY_REQUEST_TYPE = [
   { name: "requestFid", type: "uint256" },
   { name: "key", type: "bytes" },
   { name: "deadline", type: "uint256" },
@@ -76,7 +82,7 @@ export const sendMentionCast = async (
         { url: `https://only-roasts-frame.vercel.app/api/initial/${cid}` },
       ],
       embedsDeprecated: [],
-      mentions: [parentCastFid, mentionedFid],
+      mentions: [mentionedFid, parentCastFid],
       mentionsPositions,
       parentCastId: {
         hash: castHashBytes,
@@ -164,6 +170,22 @@ export const signInWithWarpcast = async () => {
     status: "pending_approval",
   };
   return user;
+};
+
+export const checkAlreadyCasted = async (cast_hash: string) => {
+  const { data, error } = await supabase
+    .from("mention-casts")
+    .select("cast_hash")
+    .eq("cast_hash", cast_hash);
+  return data;
+};
+
+export const updateSupabaseTable = async (cast_hash: string) => {
+  const { error } = await supabase.from("mention-casts").insert({
+    cast_hash,
+    posted: true,
+  });
+  return error;
 };
 
 export const getPinataMetadataCID = async (

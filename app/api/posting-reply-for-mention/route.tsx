@@ -6,12 +6,12 @@ import {
   getPinataMetadataCID,
   sendMentionCast,
   signInWithWarpcast,
+  checkAlreadyCasted,
+  updateSupabaseTable,
 } from "./utils";
 import { getWebURL } from "@/lib/utils";
 
 let intervalId: NodeJS.Timeout | null = null;
-
-const alreadyCasted: string[] = [];
 
 async function startBot() {
   if (intervalId) {
@@ -47,7 +47,9 @@ async function checkAndPostMentions() {
     // Iterate over each cast and send a roast
     for (const cast of casts) {
       try {
-        if (!alreadyCasted.includes(cast.hash)) {
+        const alreadyCasted = await checkAlreadyCasted(cast.hash);
+
+        if (alreadyCasted?.length == 0) {
           const addressResponse = await axios.get(
             `${getWebURL()}/api/getEthereumAddressByFid/${cast.data.fid}`
           );
@@ -55,8 +57,12 @@ async function checkAndPostMentions() {
             addressResponse.data.address,
             67
           );
+          
           const callerFid = cast.data.fid;
+          console.log(cast.data.fid);
           const mentionedFid = cast.data.castAddBody.mentions[1];
+          console.log(cast.data.castAddBody.mentions[1]);
+
           const result = await sendMentionCast(
             cid,
             "This you? , lol you just got roasted by your friend . Tag your friend to roast them too about their transactions onchain.",
@@ -65,7 +71,8 @@ async function checkAndPostMentions() {
             mentionedFid,
             [10, 52]
           );
-          alreadyCasted.push(cast.hash);
+
+          await updateSupabaseTable(cast.hash);
         } else {
           console.log("Already casted this mention: " + cast.hash);
         }
