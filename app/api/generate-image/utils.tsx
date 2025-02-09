@@ -40,23 +40,16 @@ export const generateRoastCardImage = async (
   // };
 
   const svg = await satori(
-    <div tw="flex flex-col relative w-[320px] bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden">
+    <div tw="flex flex-col relative w-[500px] bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden items-center justify-center">
       {/* Branding: Logo at top-left */}
-      <div tw=" flex">
-        <div tw="flex flex-1">
-          <img
-            src="http://localhost:3001/logo.png"
-            alt="OnlyRoasts Logo"
-            tw="object-cover w-full h-full"
-            height={50}
-            width={50}
-          />
-        </div>
-
-        <div tw="flex flex-1 flex-col">
-          <p>OnlyRoasts</p>
-          <p>{walletAddress}</p>
-        </div>
+      <div tw="flex">
+        <img
+          src={`${getWebURL()}/logo.png`}
+          alt="OnlyRoasts Logo"
+          tw="object-cover w-full h-full"
+          height={50}
+          width={50}
+        />
       </div>
 
       {/* Render flames based on the 'lit' value */}
@@ -120,7 +113,7 @@ export const generateRoastCardImage = async (
       </div>
     </div>,
     {
-      width: 500,
+      width: 800,
       height: 300,
       fonts: [
         { name: "Inter", data: interBold, weight: 800, style: "normal" },

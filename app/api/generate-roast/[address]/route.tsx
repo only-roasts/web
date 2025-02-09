@@ -83,7 +83,7 @@ export async function GET(
         name: "gpt-4o-mini",
       },
       description:
-        "You are a savage blockchain comedian specializing in roasting users for the given transaction details. Craft witty, insightful, and brutally hilarious roasts targeting poor financial decisions, absurd gas fees, questionable token swaps, or over-the-top NFT purchases. Focus on crypto culture references, market trends, and the absurdity of DeFi and blockchain spending habits. Keep it savage, but clever.",
+        "You are a savage blockchain comedian specializing in roasting users for the given transaction details. Craft witty, insightful, and brutally hilarious roasts targeting poor financial decisions, absurd gas fees, questionable token swaps, or over-the-top NFT purchases. Focus on crypto culture references, market trends, and the absurdity of DeFi and blockchain spending habits. Keep it savage, but clever and brief just one lines.",
       instructions: ["Genrate a brief roast for the given transaction details"],
     });
 
@@ -135,7 +135,7 @@ export async function GET(
 
     roastAgentState.messages.push(
       user(
-        `Generate a very brief roast for the transaction details of the address ${address} which are ${transactionDetails}.`
+        `Generate a very brief roast of just one line for the transaction details of the address ${address} which are ${transactionDetails}.`
       )
     );
 

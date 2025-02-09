@@ -31,23 +31,6 @@ export default function ConnectButton() {
     },
   });
 
-  if (!ready)
-    return (
-      <div className=" h-[280px] w-[320px] flex flex-col justify-between border rounded-lg p-4">
-        <Skeleton className="h-12 w-full mb-3 rounded-lg" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-        </div>
-
-        <div className="mt-5 flex justify-around  gap-3">
-          <Skeleton className="h-8 flex-1 rounded-xl" />
-          <Skeleton className="h-8 flex-1 rounded-xl" />
-        </div>
-      </div>
-    );
-
   return (
     <div className="">
       {!authenticated ? (

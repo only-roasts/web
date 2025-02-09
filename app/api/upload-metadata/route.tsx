@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 
     const latestRoastCount = await getRoastCount();
 
-    const tokenID = latestRoastCount + 1;
+    const tokenID = latestRoastCount;
     const fileObject = new File([file], `${tokenID}.png`, {
       type: "image/png",
     });
@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         cid: uploadJsonData.IpfsHash,
+        tokenID,
       },
       { status: 200 }
     );

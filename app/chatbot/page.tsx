@@ -18,7 +18,9 @@ const Chatbox: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { sendBaseToken, transactionHash, isConfirmed } = useSendBaseToken();
-  const [lastConfirmedHash, setLastConfirmedHash] = useState<string | null>(null);
+  const [lastConfirmedHash, setLastConfirmedHash] = useState<string | null>(
+    null
+  );
   const [hasTransacted, setHasTransacted] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false); // ✅ New state for modal
 
@@ -52,7 +54,11 @@ const Chatbox: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isConfirmed && transactionHash && transactionHash !== lastConfirmedHash) {
+    if (
+      isConfirmed &&
+      transactionHash &&
+      transactionHash !== lastConfirmedHash
+    ) {
       setLastConfirmedHash(transactionHash);
       setHasTransacted(true);
       setShowPopup(true); // ✅ Show the popup when transaction is confirmed
@@ -66,21 +72,22 @@ const Chatbox: React.FC = () => {
   }, [isConfirmed, transactionHash]);
 
   return (
-    <>
+    <div className="px-12 flex flex-col items-center">
       <ConnectButton />
-        <div className=" relative text-5xl text-[#FF5159] font-bold flex  mt-10  ml-5 title">
-          <p>Only</p>
-          <Flame className=" w-12 h-12 inline-block  " />
-          <p>Roasts</p>
-        </div>
-        <p className="text-xl text-gray-700 mt-4  ml-5 title titlename">
-          Where Blockchain Meets Savage Humor
-        </p>
+      <div className=" relative text-5xl text-[#FF5159] font-bold flex  mt-10  ml-5">
+        <p>Only</p>
+        <Flame className=" w-12 h-12 inline-block  " />
+        <p>Roasts</p>
+      </div>
+      <p className="text-xl text-gray-700 mt-4  ml-5 title titlename">
+        Where Blockchain Meets Savage Humor
+      </p>
 
-        <h2 className="text-[40px] font-bold text-center text-gray-800 mt-10 uppercase tracking-wide ">
-          Do your First Transaction to get your own Character card based on your transaction
-        </h2>
-        <div className="chat-container">
+      <h2 className="text-[40px] font-bold text-center text-gray-800 mt-10 uppercase tracking-wide ">
+        Do your First Transaction to get your own Character card based on your
+        transaction
+      </h2>
+      <div className="chat-container">
         <div className="chatbox">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.sender}`}>
@@ -116,7 +123,7 @@ const Chatbox: React.FC = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -40,7 +40,7 @@ async function checkAndPostMentions() {
   try {
     // Fetch mentions (casts) using the API
     const mentionedCastsResponse = await axios.get(
-      `https://hub.pinata.cloud/v1/castsByMention?fid=${process.env.FARCASTER_DEVELOPER_FID}`
+      `https://hub.pinata.cloud/v1/castsByMention?fid=${process.env.NEXT_PUBLIC_FARCASTER_DEVELOPER_FID}`
     );
     const casts = mentionedCastsResponse.data.messages;
 
@@ -54,7 +54,7 @@ async function checkAndPostMentions() {
             `${getWebURL()}/api/getEthereumAddressByFid/${cast.data.fid}`
           );
           const { cid } = await getPinataMetadataCID(
-            cast.data.castAddBody.mentions[1]
+            addressResponse.data.address
           );
 
           const callerFid = cast.data.fid;

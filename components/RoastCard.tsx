@@ -7,16 +7,17 @@ import { motion } from "framer-motion";
 import { Bangers } from "next/font/google";
 import { shortenAddress, copyToClipboard } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
+import { useWriteContract } from "wagmi";
+import { abi, address } from "@/lib/OnlyRoastNFTContract";
 
 interface RoastCardProps {
   roast: string;
-  name: string;
   showButtons: boolean;
   walletAddress: string;
-  mintNFT?: () => void;
-  castOnWarpcast: () => void;
-  share: () => void;
   lit: number; // Added lit prop to the interface
+  tokenId: number;
+  cid: string;
 }
 
 const bangers = Bangers({
@@ -29,11 +30,24 @@ const RoastCard: React.FC<RoastCardProps> = ({
   roast,
   showButtons,
   walletAddress,
-  mintNFT,
-  castOnWarpcast,
-  share,
   lit,
+  tokenId,
+  cid,
 }) => {
+  const mintNFT = async () => {
+    console.log("Minting NFT");
+
+    const { writeContract } = useWriteContract();
+
+    const data = await writeContract({
+      address: address,
+      abi: abi,
+      functionName: "safeMint",
+      //@ts-expect-error
+      args: [walletAddress, cid],
+    });
+  };
+
   // Render flames based on the 'lit' value
   const renderFlames = () => {
     const flamesArray = [];
@@ -110,18 +124,16 @@ const RoastCard: React.FC<RoastCardProps> = ({
                 Mint as NFT
               </Button>
               <Button
-                onClick={castOnWarpcast}
-                className="bg-gray-600 hover:bg-gray-700 text-white rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 shadow-lg transform hover:translate-y-[-10px] transition-transform"
+                //disabled={!enableCasting}
+
+                className="px-8 py-3 border border-white text-gray-800 bg-white hover:bg-gray-100 transition-transform transform hover:scale-105"
               >
-                <Flame className="w-5 h-5" />
-                Cast on Warpcast
-              </Button>
-              <Button
-                onClick={share}
-                className="bg-gray-600 hover:bg-gray-700 text-white rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 shadow-lg transform hover:translate-y-[-10px] transition-transform"
-              >
-                <Share2 className="w-5 h-5" />
-                Share
+                <Link
+                  href={`https://warpcast.com/~/compose?text=Check%20out%20my%20new%20AI%20roast%20by%20OnlyRoasts&embeds[]=https://only-roasts-frame.vercel.app/api/postedFromClient/${cid} )}`}
+                  target="_blank"
+                >
+                  Cast on Warpcast
+                </Link>
               </Button>
             </div>
           ) : (

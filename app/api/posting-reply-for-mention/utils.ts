@@ -21,7 +21,7 @@ import axios from "axios";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = "https://usfbtwsqfvygdatpcmyw.supabase.co";
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey!);
 
 export type FarcasterUser = {
@@ -36,11 +36,11 @@ export type FarcasterUser = {
   status: string;
 };
 
-export const FID = process.env.FARCASTER_DEVELOPER_FID
-  ? parseInt(process.env.FARCASTER_DEVELOPER_FID)
+export const FID = process.env.NEXT_PUBLIC_FARCASTER_DEVELOPER_FID
+  ? parseInt(process.env.NEXT_PUBLIC_FARCASTER_DEVELOPER_FID)
   : 0;
 
-export const SIGNER = process.env.FARCASTER_PRIVATE_KEY || "";
+export const SIGNER = process.env.NEXT_PUBLIC_FARCASTER_PRIVATE_KEY || "";
 
 export const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {
   name: "Farcaster SignedKeyRequestValidator",
@@ -119,8 +119,10 @@ export const signInWithWarpcast = async () => {
     publicKey: "0x" + Buffer.from(publicKeyBytes).toString("hex"),
     privateKey: "0x" + Buffer.from(privateKeyBytes).toString("hex"),
   };
-  const appFid = process.env.FARCASTER_DEVELOPER_FID!;
-  const account = mnemonicToAccount(process.env.FARCASTER_DEVELOPER_MNEMONIC!);
+  const appFid = process.env.NEXT_PUBLIC_FARCASTER_DEVELOPER_FID!;
+  const account = mnemonicToAccount(
+    process.env.NEXT_PUBLIC_FARCASTER_DEVELOPER_MNEMONIC!
+  );
 
   const deadline = Math.floor(Date.now() / 1000) + 86400; // signature is valid for 1 day
   const requestFid = parseInt(appFid);
@@ -218,7 +220,8 @@ export const getPinataMetadataCID = async (address: string) => {
   );
 
   const cid = uploadMetadataResponse.data.cid;
-  return { cid, roastData };
+  const tokenId = uploadMetadataResponse.data.tokenID;
+  return { cid, roastData, tokenId };
 };
 
 export const getRoastData = async (address: string) => {
