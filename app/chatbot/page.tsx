@@ -6,6 +6,7 @@ import { FaEthereum } from "react-icons/fa";
 import { useSendBaseToken } from "./transfer";
 import ImageGenerator from "../venice/page";
 import ConnectButton from "@/components/ConnectButton";
+import { Flame } from "lucide-react";
 
 interface Message {
   text: string;
@@ -16,9 +17,10 @@ const Chatbox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const { sendBaseToken, transactionHash, isConfirmed } = useSendBaseToken(); 
+  const { sendBaseToken, transactionHash, isConfirmed } = useSendBaseToken();
   const [lastConfirmedHash, setLastConfirmedHash] = useState<string | null>(null);
-  const [hasTransacted, setHasTransacted] = useState<boolean>(false); 
+  const [hasTransacted, setHasTransacted] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false); // ✅ New state for modal
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -49,12 +51,12 @@ const Chatbox: React.FC = () => {
     setLoading(false);
   };
 
-  
   useEffect(() => {
     if (isConfirmed && transactionHash && transactionHash !== lastConfirmedHash) {
-      setLastConfirmedHash(transactionHash); 
-      setHasTransacted(true); 
-  
+      setLastConfirmedHash(transactionHash);
+      setHasTransacted(true);
+      setShowPopup(true); // ✅ Show the popup when transaction is confirmed
+
       const confirmedMessage: Message = {
         text: `✅ Transaction confirmed! Tx Hash: ${transactionHash}`,
         sender: "ai",
@@ -65,8 +67,20 @@ const Chatbox: React.FC = () => {
 
   return (
     <>
-      <ConnectButton/>
-      <div className="chat-container">
+      <ConnectButton />
+        <div className=" relative text-5xl text-[#FF5159] font-bold flex  mt-10  ml-5 title">
+          <p>Only</p>
+          <Flame className=" w-12 h-12 inline-block  " />
+          <p>Roasts</p>
+        </div>
+        <p className="text-xl text-gray-700 mt-4  ml-5 title titlename">
+          Where Blockchain Meets Savage Humor
+        </p>
+
+        <h2 className="text-[40px] font-bold text-center text-gray-800 mt-10 uppercase tracking-wide ">
+          Do your First Transaction to get your own Character card based on your transaction
+        </h2>
+        <div className="chat-container">
         <div className="chatbox">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.sender}`}>
@@ -88,16 +102,18 @@ const Chatbox: React.FC = () => {
         </div>
       </div>
 
-      
-      {hasTransacted && (
-        <div>
-          <div className="secret-container">
-            🎉 Congratulations! You have completed your first transaction! 🎉
+      {/* ✅ Popup Modal for Claiming Character */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <h2>🎉 Congratulations! 🎉</h2>
+            <p>You have completed your first transaction!</p>
+            <p>Now claim your character card based on your transactions.</p>
+            <ImageGenerator />
+            <button className="close-btn" onClick={() => setShowPopup(false)}>
+              Close
+            </button>
           </div>
-          <div className="secret-container claim">
-            Now claim your character card based on your transactions
-          </div>
-          <ImageGenerator/>
         </div>
       )}
     </>
