@@ -8,26 +8,25 @@ import { StateFn } from "@covalenthq/ai-agent-sdk/dist/core/state";
 import type { ChatCompletionAssistantMessageParam } from "openai/resources";
 import { runToolCalls } from "./base";
 
-
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ prompt?: string }> } 
+  context: { params: Promise<{ prompt?: string }> }
 ) {
-    
-    type Message = {
-        role: string;
-        content: string;
-      };
-      
-      type Result = {
-        messages: Message[];
-      };
-      
-      function extractAssistantReply(result: Result): string | null {
-        const assistantMessage = result.messages.find(msg => msg.role === "assistant");
-        return assistantMessage ? assistantMessage.content : null;
-      }
-      
+  type Message = {
+    role: string;
+    content: string;
+  };
+
+  type Result = {
+    messages: Message[];
+  };
+
+  function extractAssistantReply(result: Result): string | null {
+    const assistantMessage = result.messages.find(
+      (msg) => msg.role === "assistant"
+    );
+    return assistantMessage ? assistantMessage.content : null;
+  }
 
   // Define the transaction tool that sends Sepolia ETH
   const transactionTool = createTool({
@@ -37,13 +36,11 @@ export async function GET(
       to: z.string().describe("recipient address"),
       amount: z.string().describe("amount in ETH to send"),
     }),
+    //@ts-expect-error Tool is defined
     execute: async (_args) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      return {amount:_args.amount, address:_args.to};
+      return { amount: _args.amount, address: _args.to };
     },
   });
-
-
 
   const agent = new Agent({
     name: "transaction agent",
@@ -62,7 +59,7 @@ export async function GET(
     },
   });
   const params = await context.params;
-  const user_prompt = params.prompt
+  const user_prompt = params.prompt;
 
   const state = StateFn.root(agent.description);
   state.messages.push(
@@ -70,10 +67,11 @@ export async function GET(
       //" recipient's address : 0x5352b10D192475cA7Fa799e502c29Ab3AA28657F, amount of Sepolia ETH: 0.1"
       //"hi"
       //"how to send transactions via etherium"
+      //@ts-expect-error prompt is defined
+
       user_prompt
     )
   );
-
 
   const result = await agent.run(state);
   const toolCall = result.messages[
@@ -90,12 +88,13 @@ export async function GET(
   ); //map which tool called by ai
   //console.log(toolResponses[0].content);
 
+  //@ts-expect-error correct type
   const responseContent = extractAssistantReply(result); // Getting assistant reply as string
 
   const response = {
-    message: responseContent, 
-    tool: toolResponses.length > 0 ? toolResponses[0].content : null, 
-    };
+    message: responseContent,
+    tool: toolResponses.length > 0 ? toolResponses[0].content : null,
+  };
 
   return NextResponse.json({
     // roast: " You've been rickrolled ",
