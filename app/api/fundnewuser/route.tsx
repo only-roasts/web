@@ -10,11 +10,11 @@ const privy = new PrivyClient(
 async function sendtransaction(address: `0x${string}`) {
   const data = await privy.walletApi.ethereum.sendTransaction({
     walletId: process.env.PRIVY_SERVER_WALLET_ID!,
-    caip2: "eip155:11155111",
+    caip2: "eip155:84532",
     transaction: {
       to: address,
       value: 10000000000000000, // 0.01 ETH  to new users via sepolia eth network
-      chainId: 11155111,
+      chainId: 84532,
     },
   });
 

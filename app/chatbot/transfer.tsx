@@ -1,63 +1,54 @@
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { abi } from "./abi";
-import { parseEther } from "viem";
 import { useState, useEffect } from "react";
+import { useWallets } from "@privy-io/react-auth";
+import { ethers } from "ethers"; // ✅ Import ethers for provider wrapping
+import { parseEther } from "viem";
 
 const CONTRACT_ADDRESS = "0x4b36621D45987Fcd3F70B3d81e6732BEB344631A";
-
 export const useSendBaseToken = () => {
-  const { data: hash, isPending, writeContract } = useWriteContract(); // ✅ Wagmi provides the hash
+  const { wallets, ready } = useWallets();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
-
-  // Wait for transaction confirmation
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash, // ✅ Wagmi's hash tracking
-    });
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const sendBaseToken = async (recipient: string, amount: string) => {
-    if (!recipient) {
-      console.error("Recipient address required");
-      return "❌ Recipient address required";
-    }
+    if (!recipient) return "❌ Recipient address required";
+    if (!ready) return "❌ Wallets are still loading, please wait...";
+
+    const wallet = wallets[0];
+    if (!wallet) return "❌ No wallet connected!";
 
     try {
-      console.log("🚀 Sending transaction... Waiting for MetaMask confirmation...");
+      console.log(`🚀 Sending transaction using ${wallet.walletClientType} wallet...`);
+      const provider = await wallet.getEthereumProvider();
+      if (!provider) throw new Error("Ethereum provider not found!");
 
-      // ✅ Initiate transaction (do NOT await)
-      const tx = writeContract({
-        address: CONTRACT_ADDRESS,
-        abi,
-        functionName: "transferFunds",
-        args: [recipient],
+      const ethersProvider = new ethers.providers.Web3Provider(provider);
+      const signer = ethersProvider.getSigner();
+
+      const tx = await signer.sendTransaction({
+        to: recipient,
         value: parseEther(amount),
       });
 
-      if (!tx) {
-        throw new Error("Transaction could not be created.");
-      }
+      console.log("📜 Transaction submitted:", tx.hash);
+      setTransactionHash(tx.hash);
+      setIsConfirming(true);
 
-      console.log("📜 Transaction sent, waiting for MetaMask confirmation...");
       
-      // ✅ Update state when hash is received
-      setTransactionHash(hash || null);
+      await tx.wait();
+      setIsConfirming(false);
+      setIsConfirmed(true);
 
-      return `⏳ Transaction submitted! Waiting for confirmation... (Tx Hash: ${hash})`;
+     
+
+      return null; // 
     } catch (error) {
       console.error("❌ Transaction error:", error);
-      setErrorMessage("🚀 Sending transaction... Waiting for MetaMask confirmation..");
-      return "🚀 Sending transaction... Waiting for MetaMask confirmation..";
+      setErrorMessage("🚀 Error processing transaction");
+      return "🚀 Error processing transaction";
     }
   };
 
-  // ✅ Log when confirmed
-  useEffect(() => {
-    if (isConfirmed && hash) {
-      console.log(`✅ Transaction confirmed: ${hash}`);
-      setTransactionHash(hash); // ✅ Ensure hash is set
-    }
-  }, [isConfirmed, hash]);
-
-  return { sendBaseToken, isPending, isConfirming, isConfirmed, transactionHash, errorMessage };
+  return { sendBaseToken, isPending: !ready, isConfirming, isConfirmed, transactionHash, errorMessage };
 };
